@@ -98,7 +98,8 @@ fun OpponentChatBubble(
                 colors = cardColor
             ) {
                 MarkdownText(
-                    modifier = Modifier.padding(24.dp),
+                    modifier = Modifier
+                    .padding(start = 16.dp, end = 16.dp, top = 16.dp),
                     markdown = text.trimIndent() + if (isLoading) "▊" else "",
                     isTextSelectable = true,
                     linkifyMask = Linkify.WEB_URLS
