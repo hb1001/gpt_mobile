@@ -1,0 +1,43 @@
+name: Build APK on Push to Main
+
+on:
+  push:
+    branches:
+      - main # 在 main 分支有推送时触发
+
+jobs:
+  build:
+    name: Build Android APK
+    runs-on: ubuntu-latest
+
+    steps:
+    # Step 1: 检出代码
+    - name: Checkout repository
+      uses: actions/checkout@v3
+
+    # Step 2: 设置 JDK 环境
+    - name: Set up JDK
+      uses: actions/setup-java@v3
+      with:
+        distribution: 'zulu'
+        java-version: '11' # Android 项目常用的 JDK 版本
+
+    # Step 3: 缓存 Gradle 依赖
+    - name: Cache Gradle dependencies
+      uses: actions/cache@v3
+      with:
+        path: ~/.gradle/caches
+        key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+        restore-keys: |
+          ${{ runner.os }}-gradle-
+
+    # Step 4: 构建 APK
+    - name: Build APK
+      run: ./gradlew assembleRelease
+
+    # Step 5: 上传生成的 APK
+    - name: Upload APK
+      uses: actions/upload-artifact@v3
+      with:
+        name: app-release-apk
+        path: app/build/outputs/apk/release/*.apk
