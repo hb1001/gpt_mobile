@@ -25,6 +25,14 @@ android {
             useSupportLibrary = true
         }
     }
+    signingConfigs {
+        create("commomKeyStore") {
+            keyAlias = "key001"
+            keyPassword = "key001"
+            storeFile = file("../common_key.jks")
+            storePassword = "key001"
+        }
+    }
 
     androidResources {
         @file:Suppress("UnstableApiUsage") // Incubating class
@@ -36,6 +44,7 @@ android {
             isMinifyEnabled = true
             @file:Suppress("UnstableApiUsage")
             vcsInfo.include = false
+            signingConfig = signingConfigs.getByName("commomKeyStore")
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
